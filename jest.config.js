@@ -2,6 +2,7 @@ const {defaults: tsjPreset} = require('ts-jest/presets');
 
 module.exports = {
   preset: 'react-native',
+  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
   globals: {
     'ts-jest': {
       tsconfig: 'tsconfig.spec.json',
