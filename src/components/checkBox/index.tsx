@@ -1,27 +1,46 @@
+import React, {memo, useCallback} from 'react';
+import {StyleSheet, TouchableHighlight} from 'react-native';
+import Animated from 'react-native-reanimated';
+
+import {useAnimateCheckBox} from './hooks/useAnimateCheckBox';
+import {useAnimateCheckMark} from './hooks/useAnimateCheckMark';
+
 import {COLORS} from '@src/constants/color';
-import React, {memo} from 'react';
-import {StyleSheet, View} from 'react-native';
 import {CHECKBOX_ID} from './constants/testIds';
+import CheckMark from './CheckMark';
 
 interface CheckBoxProps {
   isChecked: boolean;
+  onPress: () => void;
 }
 
-const CheckBox = memo(({isChecked}: CheckBoxProps): JSX.Element => {
+const CheckBox = memo(({isChecked, onPress}: CheckBoxProps): JSX.Element => {
+  const [animatedStyle, animateCheckBox] = useAnimateCheckBox(isChecked);
+  const [leftCheckAnimatedStyle, rightCheckAnimatedStyle, animateCheckIcon] =
+    useAnimateCheckMark(isChecked);
+
+  const handlePress = useCallback(() => {
+    animateCheckBox();
+    animateCheckIcon();
+    onPress();
+  }, [animateCheckBox, animateCheckIcon, onPress]);
+
   return (
-    <View
-      style={{
-        ...styles.body,
-        backgroundColor: isChecked ? COLORS.SECONDARY : undefined,
-      }}
-      testID={CHECKBOX_ID.COMPONENT_BODY}>
-      <View
-        style={styles.checkIconContainer}
-        testID={CHECKBOX_ID.COMPONENT_ICON}>
-        <View style={styles.checkIconLeft} />
-        <View style={styles.checkIconRight} />
-      </View>
-    </View>
+    <TouchableHighlight underlayColor="transparent" onPress={handlePress}>
+      <Animated.View
+        testID={CHECKBOX_ID.COMPONENT_BODY}
+        style={[
+          {
+            ...styles.body,
+          },
+          animatedStyle,
+        ]}>
+        <CheckMark
+          leftCheckAnimatedStyle={leftCheckAnimatedStyle}
+          rightCheckAnimatedStyle={rightCheckAnimatedStyle}
+        />
+      </Animated.View>
+    </TouchableHighlight>
   );
 });
 
@@ -32,27 +51,6 @@ const styles = StyleSheet.create({
     width: 36,
     borderWidth: 2,
     borderRadius: 8,
-  },
-  checkIconContainer: {
-    flexDirection: 'row',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  checkIconLeft: {
-    borderTopWidth: 4,
-    borderColor: 'white',
-    marginTop: 8,
-    marginRight: -6.5,
-    width: 11,
-    transform: [{rotate: '45deg'}],
-  },
-  checkIconRight: {
-    borderTopWidth: 4,
-    borderColor: 'white',
-    width: 20,
-    transform: [{rotate: '135deg'}],
   },
 });
 
