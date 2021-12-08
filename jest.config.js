@@ -2,13 +2,11 @@ const {defaults: tsjPreset} = require('ts-jest/presets');
 
 module.exports = {
   preset: 'react-native',
-  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
   globals: {
     'ts-jest': {
       tsconfig: 'tsconfig.spec.json',
     },
   },
-  transformIgnorePatterns: [],
   transform: {
     '^.+\\.jsx$': 'babel-jest',
     '^.+\\.tsx?$': 'ts-jest',
@@ -17,4 +15,9 @@ module.exports = {
   moduleNameMapper: {
     '@src/(.*)': '<rootDir>/src/$1',
   },
+  setupFilesAfterEnv: [
+    '@testing-library/jest-native/extend-expect',
+    '<rootDir>/__mocks__/globalMock.js',
+  ],
+  transformIgnorePatterns: [],
 };
