@@ -24,7 +24,6 @@ const CheckBox = memo(
     const [animatedStyle, animateCheckBox] = useAnimateCheckBox(isChecked);
     const [leftCheckAnimatedStyle, rightCheckAnimatedStyle, animateCheckIcon] =
       useAnimateCheckMark(isChecked);
-    const isShowTextBlock = text || subText;
 
     const handlePress = useCallback(() => {
       animateCheckBox();
@@ -48,7 +47,7 @@ const CheckBox = memo(
               rightCheckAnimatedStyle={rightCheckAnimatedStyle}
             />
           </Animated.View>
-          {isShowTextBlock ? (
+          {text || subText ? (
             <View style={styles.textsWrapper}>
               {text && (
                 <Text numberOfLines={3} style={styles.text}>
@@ -75,11 +74,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   container: {
-    flex: 1,
     flexDirection: 'row',
   },
   textsWrapper: {
-    flex: 1,
     marginLeft: 12,
     justifyContent: 'center',
   },
